@@ -1,0 +1,78 @@
+apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
+    defaultConfig {
+        applicationId "com.mozawa.coineyapp"
+        minSdkVersion 14
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+
+    final SUPPORT_LIBRARY_VERSION = '24.2.1'
+    final CONSTRAINT_LAYOUT_VERSION = '1.0.0-alpha8'
+    final BUTTERKNIFE_VERSION = '8.4.0'
+    final PICASSO_VERSION = '2.5.0'
+    final OKHTTP_VERSION = '3.4.1'
+    final RETROFIT_VERSION = '2.1.0'
+    final RXANDROID_VERSION = '1.2.1'
+    final RXJAVA_VERSION = '1.1.6'
+    final GSON_VERSION = '2.4'
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Support
+    compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:cardview-v7:$SUPPORT_LIBRARY_VERSION"
+
+    // Constraint Layout
+    compile "com.android.support.constraint:constraint-layout:$CONSTRAINT_LAYOUT_VERSION"
+
+    // Picasso
+    compile "com.squareup.picasso:picasso:$PICASSO_VERSION"
+
+    // Butterknife
+    compile "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
+    apt "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"
+
+    // OkHttp
+    compile "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"
+    compile "com.squareup.okhttp3:logging-interceptor:$OKHTTP_VERSION"
+
+    // Retrofit
+    compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
+    compile "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
+    compile "com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION"
+
+    // Rx
+    compile "io.reactivex:rxandroid:$RXANDROID_VERSION"
+    compile "io.reactivex:rxjava:$RXJAVA_VERSION"
+
+    // Gson
+    compile "com.google.code.gson:gson:$GSON_VERSION"
+
+    // Annotations
+    compile 'org.glassfish:javax.annotation:10.0-b28'
+    provided 'javax.annotation:jsr250-api:1.0'
+
+    // Test
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile 'junit:junit:4.12'
+}
