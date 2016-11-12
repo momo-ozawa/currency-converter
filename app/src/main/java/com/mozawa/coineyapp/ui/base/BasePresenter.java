@@ -1,7 +1,5 @@
 package com.mozawa.coineyapp.ui.base;
 
-import com.mozawa.coineyapp.data.DataManager;
-
 /**
  * Base class that implements the Presenter interface and provides a base implementation for
  * attachView() and detachView(). It also handles keeping a reference to the mvpView that
@@ -10,11 +8,6 @@ import com.mozawa.coineyapp.data.DataManager;
 public class BasePresenter<T extends MvpView> implements Presenter<T> {
 
     private T mvpView;
-    protected DataManager dataManager;
-
-    public BasePresenter() {
-        this.dataManager = DataManager.getInstance();
-    }
 
     @Override
     public void attachView(T mvpView) {
