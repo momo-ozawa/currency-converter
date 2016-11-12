@@ -1,46 +1,53 @@
-package com.mozawa.coineyapp.ui.main;
+package com.mozawa.coineyapp.ui.rates;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.mozawa.coineyapp.R;
+import com.mozawa.coineyapp.data.model.Exchange;
+import com.mozawa.coineyapp.ui.base.BaseActivity;
+import com.mozawa.coineyapp.ui.widgets.DividerItemDecoration;
+
+import java.util.Map;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements MainMvpView {
+public class RatesActivity extends BaseActivity implements RatesMvpView {
+
+    @Inject
+    RatesPresenter presenter;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.fab)
-    FloatingActionButton fab;
+    @BindView(R.id.ratesRecyclerView)
+    RecyclerView ratesRecyclerView;
 
-    private MainPresenter presenter;
+    private RatesAdapter ratesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        getActivityComponent().inject(this);
+        setContentView(R.layout.activity_rates);
         ButterKnife.bind(this);
+
+        // Set up toolbar.
         setSupportActionBar(toolbar);
 
-        // Set up presenter. We always need to attach the view before calling any presenter methods.
-        presenter = new MainPresenter();
+        // Set up adapter.
+        ratesAdapter = new RatesAdapter(this);
+
+        // Always need to attach the view before calling any presenter methods.
         presenter.attachView(this);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        presenter.loadMap();
     }
 
     @Override
@@ -66,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements MainMvpView {
     }
 
     /*******
-     * MainMvpView implementation
+     * RatesMvpView implementation
      *******/
 
     @Override
@@ -75,8 +82,13 @@ public class MainActivity extends AppCompatActivity implements MainMvpView {
     }
 
     @Override
-    public void showResult() {
+    public void showResult(Map<String, Exchange> map) {
+        ratesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        ratesRecyclerView.setAdapter(ratesAdapter);
+        ratesRecyclerView.addItemDecoration(new DividerItemDecoration(this));
 
+        ratesAdapter.setData(map);
+        ratesAdapter.notifyDataSetChanged();
     }
 
     @Override
