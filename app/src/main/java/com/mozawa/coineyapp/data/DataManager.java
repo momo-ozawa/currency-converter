@@ -1,8 +1,13 @@
 package com.mozawa.coineyapp.data;
 
+import com.mozawa.coineyapp.data.model.Exchange;
 import com.mozawa.coineyapp.data.remote.CoineyService;
 
+import java.util.Map;
+
 import javax.inject.Inject;
+
+import rx.Observable;
 
 public class DataManager {
 
@@ -13,13 +18,7 @@ public class DataManager {
         this.coineyService = coineyService;
     }
 
-//    public Observable<List<FlickrEntry>> getFlickrEntries(String tags, String tagMode) {
-//        return coineyService.getFlickrFeed(tags, tagMode).flatMap(new Func1<FlickrFeed, Observable<List<FlickrEntry>>>() {
-//            @Override
-//            public Observable<List<FlickrEntry>> call(FlickrFeed flickrFeed) {
-//                return Observable.just(flickrFeed.items);
-//            }
-//        });
-//    }
-
+    public Observable<Map<String, Exchange>> getMap() {
+        return coineyService.getExchangeRates();
+    }
 }
