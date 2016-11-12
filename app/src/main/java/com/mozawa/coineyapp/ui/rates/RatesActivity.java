@@ -6,9 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.mozawa.coineyapp.R;
-import com.mozawa.coineyapp.data.model.Exchange;
 import com.mozawa.coineyapp.ui.base.BaseActivity;
 import com.mozawa.coineyapp.ui.widgets.DividerItemDecoration;
 
@@ -82,7 +82,7 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
     }
 
     @Override
-    public void showResult(Map<String, Exchange> map) {
+    public void showResult(Map<String, Double> map) {
         ratesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         ratesRecyclerView.setAdapter(ratesAdapter);
         ratesRecyclerView.addItemDecoration(new DividerItemDecoration(this));
@@ -93,7 +93,7 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
 
     @Override
     public void showError() {
-
+        Toast.makeText(this, "Error!", Toast.LENGTH_SHORT).show();
     }
 
     @Override

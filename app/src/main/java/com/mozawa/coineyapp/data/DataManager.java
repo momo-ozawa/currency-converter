@@ -1,6 +1,5 @@
 package com.mozawa.coineyapp.data;
 
-import com.mozawa.coineyapp.data.model.Exchange;
 import com.mozawa.coineyapp.data.remote.CoineyService;
 
 import java.util.Map;
@@ -18,7 +17,7 @@ public class DataManager {
         this.coineyService = coineyService;
     }
 
-    public Observable<Map<String, Exchange>> getMap() {
+    public Observable<Map<String, Map<String, Double>>> getMap() {
         return coineyService.getExchangeRates();
     }
 }

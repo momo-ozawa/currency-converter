@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mozawa.coineyapp.R;
-import com.mozawa.coineyapp.data.model.Exchange;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +20,15 @@ public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> 
 
     Context context;
     List<String> currencyList;
+    List<Double> exchangeRateList;
 
     public RatesAdapter(Context context) {
         this.context = context;
     }
 
-    public void setData(Map<String, Exchange> exchangeRateMap) {
+    public void setData(Map<String, Double> exchangeRateMap) {
         currencyList = new ArrayList<>(exchangeRateMap.keySet());
+        exchangeRateList = new ArrayList<>(exchangeRateMap.values());
     }
 
     public void setContext(Context context) {
@@ -36,16 +37,18 @@ public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> 
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(context).inflate(R.layout.item_exchange_rate, null);
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        View itemView = layoutInflater.inflate(R.layout.item_exchange_rate, parent, false);
         return new ViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         String currency = currencyList.get(position);
+        Double exchangeRate = exchangeRateList.get(position);
 
         holder.currencyTextView.setText(currency);
-        holder.exchangeRateTextView.setText(currency);
+        holder.exchangeRateTextView.setText(exchangeRate + "");
     }
 
     @Override

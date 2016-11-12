@@ -3,7 +3,6 @@ package com.mozawa.coineyapp.ui.rates;
 import android.util.Log;
 
 import com.mozawa.coineyapp.data.DataManager;
-import com.mozawa.coineyapp.data.model.Exchange;
 import com.mozawa.coineyapp.ui.base.BasePresenter;
 import com.mozawa.coineyapp.util.RxUtil;
 
@@ -50,7 +49,7 @@ public class RatesPresenter extends BasePresenter<RatesMvpView> {
         subscription = dataManager.getMap()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Map<String, Exchange>>() {
+                .subscribe(new Subscriber<Map<String, Map<String, Double>>>() {
                     @Override
                     public void onCompleted() {
                         getMvpView().showProgressBar(false);
@@ -65,10 +64,14 @@ public class RatesPresenter extends BasePresenter<RatesMvpView> {
                     }
 
                     @Override
-                    public void onNext(Map<String, Exchange> map) {
+                    public void onNext(Map<String, Map<String, Double>> map) {
                         if (map != null) {
                             // FIXME: 11/12/16 Just making sure I can fetch/display data
-                            getMvpView().showResult(map);
+
+                            if (map.get("jpy") != null) {
+                                Map<String, Double> jpy = map.get("jpy");
+                                getMvpView().showResult(jpy);
+                            }
                         }
                     }
                 });
