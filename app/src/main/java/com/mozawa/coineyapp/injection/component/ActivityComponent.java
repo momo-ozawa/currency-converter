@@ -3,7 +3,7 @@ package com.mozawa.coineyapp.injection.component;
 import com.mozawa.coineyapp.injection.PerActivity;
 import com.mozawa.coineyapp.injection.module.ActivityModule;
 import com.mozawa.coineyapp.ui.base.BaseActivity;
-import com.mozawa.coineyapp.ui.rates.RatesActivity;
+import com.mozawa.coineyapp.ui.main.RatesActivity;
 
 import dagger.Component;
 
