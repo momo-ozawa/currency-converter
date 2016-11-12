@@ -1,22 +1,26 @@
 package com.mozawa.coineyapp.data.remote;
 
+import com.mozawa.coineyapp.data.model.ExchangeResponse;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.GET;
+import rx.Observable;
 
-public interface Service {
+public interface CoineyService {
 
-    String BASE_URL = "https://api.flickr.com/services/feeds/";
+    String BASE_URL = "https://android.coiney.com:1337/";
 
-//    @GET("photos_public.gne?format=json&nojsoncallback=1")
-//    Observable<FlickrFeed> getFlickrFeed(@Query("tags") String tags, @Query("tagmode") String mode);
+    @GET("exchange_rates")
+    Observable<ExchangeResponse> getExchangeRates();
 
     /******* Helper class that sets up a new service *******/
     class Creator {
 
-        public static Service newService() {
+        public static CoineyService newCoineyService() {
 
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor()
                     .setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -32,7 +36,7 @@ public interface Service {
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .build();
 
-            return retrofit.create(Service.class);
+            return retrofit.create(CoineyService.class);
         }
     }
 
