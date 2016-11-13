@@ -7,9 +7,9 @@ import java.util.HashMap;
 public interface RatesMvpView extends MvpView {
 
     void showProgressBar(boolean b);
-    void showResult(HashMap<String, HashMap<String, Double>> exchangeRates);
+    void showExchangeRates(HashMap<String, HashMap<String, Double>> exchangeRates);
     void showError();
-    void showResultEmpty();
+    void showExchangeRatesEmpty();
 
     void showConversionDialog();
 

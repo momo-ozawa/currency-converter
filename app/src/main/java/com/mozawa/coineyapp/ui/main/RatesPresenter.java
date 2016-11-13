@@ -61,14 +61,16 @@ public class RatesPresenter extends BasePresenter<RatesMvpView> {
 
                     @Override
                     public void onNext(HashMap<String, HashMap<String, Double>> exchangeRates) {
-                        if (exchangeRates != null) {
-                            getMvpView().showResult(exchangeRates);
+                        if (exchangeRates != null || exchangeRates.size() != 0) {
+                            getMvpView().showExchangeRates(exchangeRates);
+                        }  else {
+                            getMvpView().showExchangeRatesEmpty();
                         }
                     }
                 });
     }
 
-    public void onConvertClicked() {
+    public void onCalculateConversionClicked() {
         checkViewAttached();
         getMvpView().showConversionDialog();
     }

@@ -7,6 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mozawa.coineyapp.R;
@@ -27,12 +32,18 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
     @Inject
     RatesPresenter presenter;
 
+    @Inject
+    RatesAdapter ratesAdapter;
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.ratesRecyclerView)
     RecyclerView ratesRecyclerView;
+    @BindView(R.id.lastUpdatedTextView)
+    TextView lastUpdatedTextView;
+    @BindView(R.id.baseCurrencySpinner)
+    Spinner baseCurrencySpinner;
 
-    private RatesAdapter ratesAdapter;
     private HashMap<String, HashMap<String, Double>> exchangeRates;
 
     @Override
@@ -45,14 +56,25 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
         // Set up toolbar.
         setSupportActionBar(toolbar);
 
-        // Set up adapter.
-        ratesAdapter = new RatesAdapter(this);
-
         // Always need to attach the view before calling any presenter methods.
         presenter.attachView(this);
 
         // Load exchange rates.
         presenter.loadExchangeRates();
+
+        // Set up a item selected listener so we can update the recycler view data
+        // when a user makes a selects a base currency in the spinner.
+        baseCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                updateRecylerView(exchangeRates);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Override
@@ -66,12 +88,20 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_convert:
-                presenter.onConvertClicked();
+                presenter.onCalculateConversionClicked();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    // Helper method to update recycler view data based on the selected base currency.
+    private void updateRecylerView(HashMap<String, HashMap<String, Double>> exchangeRates) {
+        String selectedCurrency = baseCurrencySpinner.getSelectedItem().toString();
+        ratesAdapter.setData(exchangeRates.get(selectedCurrency));
+        ratesAdapter.notifyDataSetChanged();
+    }
+
 
     /*******
      * RatesMvpView implementation
@@ -83,17 +113,24 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
     }
 
     @Override
-    public void showResult(HashMap<String, HashMap<String, Double>> exchangeRates) {
-        // Set exchangeRates hashmap.
+    public void showExchangeRates(HashMap<String, HashMap<String, Double>> exchangeRates) {
         this.exchangeRates = exchangeRates;
 
+        // Convert map keySet to a string array.
+        Set<String> keys = exchangeRates.keySet();
+        String[] currencyArray = keys.toArray(new String[keys.size()]);
+
+        // Set adapter to spinner.
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, currencyArray);
+        baseCurrencySpinner.setAdapter(adapter);
+
+        // Set up recycler view.
         ratesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         ratesRecyclerView.setAdapter(ratesAdapter);
         ratesRecyclerView.addItemDecoration(new DividerItemDecoration(this));
 
-        // TODO: 11/13/16 Call setData based on the selected currency.
-        ratesAdapter.setData(this.exchangeRates.get("jpy"));
-        ratesAdapter.notifyDataSetChanged();
+        updateRecylerView(exchangeRates);
     }
 
     @Override
@@ -102,7 +139,7 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
     }
 
     @Override
-    public void showResultEmpty() {
+    public void showExchangeRatesEmpty() {
 
     }
 
@@ -112,4 +149,5 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
         ConversionDialogFragment dialogFragment = ConversionDialogFragment.newInstance(exchangeRates);
         dialogFragment.show(fm, "fragment_conversion_dialog");
     }
+
 }

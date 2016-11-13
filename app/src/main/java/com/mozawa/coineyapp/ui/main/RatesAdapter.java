@@ -1,6 +1,5 @@
 package com.mozawa.coineyapp.ui.main;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,29 +9,29 @@ import android.widget.TextView;
 import com.mozawa.coineyapp.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.ViewHolder> {
 
-    Context context;
-    List<String> currencyList;
-    List<Double> exchangeRateList;
+    private List<String> currencyList;
+    private List<Double> exchangeRateList;
 
-    public RatesAdapter(Context context) {
-        this.context = context;
+    @Inject
+    public RatesAdapter() {
+        this.currencyList = new ArrayList<>();
+        this.exchangeRateList = new ArrayList<>();
     }
 
-    public void setData(Map<String, Double> exchangeRateMap) {
-        currencyList = new ArrayList<>(exchangeRateMap.keySet());
-        exchangeRateList = new ArrayList<>(exchangeRateMap.values());
-    }
+    public void setData(HashMap<String, Double> rates) {
+        this.currencyList = new ArrayList<>(rates.keySet());
+        this.exchangeRateList = new ArrayList<>(rates.values());
 
-    public void setContext(Context context) {
-        this.context = context;
     }
 
     @Override
