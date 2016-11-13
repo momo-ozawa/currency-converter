@@ -13,7 +13,7 @@
     <item
         android:id="@+id/action_convert"
         android:title="Calculate Conversion"
-        android:icon="@drawable/ic_search_white_24dp"
+        android:icon="@drawable/ic_attach_money_white_24dp"
         app:showAsAction="ifRoom"
         />
 
