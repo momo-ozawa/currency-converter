@@ -19,24 +19,13 @@
         android:textStyle="bold"
         />
 
-    <TextView
-        android:id="@+id/exchangeRateTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/titleTextView"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="24dp"
-        android:text="1 USD = 100 JPY"
-        />
-
     <!--BASE currency-->
 
     <TextView
         android:id="@+id/baseCurrencyTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/exchangeRateTextView"
+        android:layout_below="@+id/titleTextView"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="24dp"
@@ -55,7 +44,7 @@
 
         <EditText
             android:id="@+id/editText"
-            android:layout_width="0dip"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:digits="0123456789."
@@ -93,13 +82,15 @@
         android:layout_marginBottom="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/targetResultTextView"
-            android:layout_width="0dip"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
             android:layout_weight="3"
             android:textColor="@android:color/black"
             android:textSize="18sp"
