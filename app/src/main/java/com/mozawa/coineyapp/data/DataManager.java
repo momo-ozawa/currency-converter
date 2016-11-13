@@ -2,7 +2,7 @@ package com.mozawa.coineyapp.data;
 
 import com.mozawa.coineyapp.data.remote.CoineyService;
 
-import java.util.Map;
+import java.util.HashMap;
 
 import javax.inject.Inject;
 
@@ -17,7 +17,7 @@ public class DataManager {
         this.coineyService = coineyService;
     }
 
-    public Observable<Map<String, Map<String, Double>>> getMap() {
+    public Observable<HashMap<String, HashMap<String, Double>>> getMap() {
         return coineyService.getExchangeRates();
     }
 }

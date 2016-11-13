@@ -14,7 +14,7 @@ import com.mozawa.coineyapp.ui.base.BaseActivity;
 import com.mozawa.coineyapp.ui.conversion.ConversionDialogFragment;
 import com.mozawa.coineyapp.ui.widgets.DividerItemDecoration;
 
-import java.util.Map;
+import java.util.HashMap;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -33,7 +33,7 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
     RecyclerView ratesRecyclerView;
 
     private RatesAdapter ratesAdapter;
-    private Map<String, Double> map;
+    private HashMap<String, HashMap<String, Double>> exchangeRates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
         presenter.attachView(this);
 
         // Load exchange rates.
-        presenter.loadMap();
+        presenter.loadExchangeRates();
     }
 
     @Override
@@ -83,14 +83,16 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
     }
 
     @Override
-    public void showResult(Map<String, Double> map) {
-        this.map = map;
+    public void showResult(HashMap<String, HashMap<String, Double>> exchangeRates) {
+        // Set exchangeRates hashmap.
+        this.exchangeRates = exchangeRates;
 
         ratesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         ratesRecyclerView.setAdapter(ratesAdapter);
         ratesRecyclerView.addItemDecoration(new DividerItemDecoration(this));
 
-        ratesAdapter.setData(map);
+        // TODO: 11/13/16 Call setData based on the selected currency.
+        ratesAdapter.setData(this.exchangeRates.get("jpy"));
         ratesAdapter.notifyDataSetChanged();
     }
 
@@ -106,12 +108,8 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
 
     @Override
     public void showConversionDialog() {
-        // Convert map keySet to a string array.
-        Set<String> keys = map.keySet();
-        String[] currencyArray = keys.toArray(new String[keys.size()]);
-
         FragmentManager fm = getSupportFragmentManager();
-        ConversionDialogFragment dialogFragment = ConversionDialogFragment.newInstance(currencyArray);
+        ConversionDialogFragment dialogFragment = ConversionDialogFragment.newInstance(exchangeRates);
         dialogFragment.show(fm, "fragment_conversion_dialog");
     }
 }

@@ -1,6 +1,6 @@
 package com.mozawa.coineyapp.data.remote;
 
-import java.util.Map;
+import java.util.HashMap;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -15,7 +15,7 @@ public interface CoineyService {
     String BASE_URL = "http://android.coiney.com:1337/";
 
     @GET("exchange_rates")
-    Observable<Map<String, Map<String, Double>>> getExchangeRates();
+    Observable<HashMap<String, HashMap<String, Double>>> getExchangeRates();
 
     /******* Helper class that sets up a new service *******/
     class Creator {
