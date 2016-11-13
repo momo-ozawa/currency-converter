@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mozawa.coineyapp.R;
 import com.mozawa.coineyapp.ui.base.BaseActivity;
@@ -95,12 +96,32 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // Use this method to enable/disable the conversion icon.
+        // Don't want the app to crash if exchangeRates is null.
+        MenuItem item = menu.findItem(R.id.action_convert);
+        if (exchangeRates != null) {
+            // Enabled.
+            item.setEnabled(true);
+            item.getIcon().setAlpha(255);
+        } else {
+            // Disabled.
+            item.setEnabled(false);
+            item.getIcon().setAlpha(130);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
+                // Reload exchange rates.
                 presenter.loadExchangeRates();
                 return true;
             case R.id.action_convert:
+                // Launch modal dialog.
                 presenter.onCalculateConversionClicked();
                 return true;
             default:
@@ -116,6 +137,10 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
     public void showExchangeRates(HashMap<String, HashMap<String, Double>> exchangeRates) {
         this.exchangeRates = exchangeRates;
 
+        // Need to call supportInvalidateOptionsMenu() to trigger onPreparedOptionsMenu()...
+        // This will dynamically enable/disable the conversion icon.
+        supportInvalidateOptionsMenu();
+
         // Convert map keySet to a List<String>.
         List<String> currencyList = new ArrayList<>(exchangeRates.keySet());
 
@@ -126,12 +151,7 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
 
         // Make sure the last updated text view, select currency layout and the
         // recycler view are visible, but not the message text view.
-        if (messageTextView.getVisibility() == View.VISIBLE) {
-            messageTextView.setVisibility(View.GONE);
-        }
-        lastUpdatedTextView.setVisibility(View.VISIBLE);
-        selectCurrencyLayout.setVisibility(View.VISIBLE);
-        ratesRecyclerView.setVisibility(View.VISIBLE);
+        resetVisiblity();
 
         // Set up recycler view.
         ratesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -149,7 +169,10 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
 
     @Override
     public void showError() {
-        showMessage(getString(R.string.error_message));
+        if (exchangeRates == null) {
+            showMessage(getString(R.string.error_message));
+        }
+        Toast.makeText(this, "Couldn't refresh exchange rates.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -167,6 +190,15 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
     /*******
      * Helper methods
      *******/
+
+    private void resetVisiblity() {
+        if (messageTextView.getVisibility() == View.VISIBLE) {
+            messageTextView.setVisibility(View.GONE);
+        }
+        lastUpdatedTextView.setVisibility(View.VISIBLE);
+        selectCurrencyLayout.setVisibility(View.VISIBLE);
+        ratesRecyclerView.setVisibility(View.VISIBLE);
+    }
 
     private void setBaseCurrencySpinnerSelection(List<String> currencyList) {
         String baseCurrencyFromPref = preferencesHelper.getBaseCurrency();

@@ -8,6 +8,8 @@ import com.mozawa.coineyapp.injection.ApplicationContext;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import static android.content.Context.MODE_PRIVATE;
+
 @Singleton
 public class PreferencesHelper {
 
@@ -18,7 +20,7 @@ public class PreferencesHelper {
 
     @Inject
     public PreferencesHelper(@ApplicationContext Context context) {
-        sharedPrefs = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        sharedPrefs = context.getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
     }
 
     public void clear() {
