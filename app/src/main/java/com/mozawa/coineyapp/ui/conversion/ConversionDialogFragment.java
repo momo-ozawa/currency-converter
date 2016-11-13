@@ -48,7 +48,6 @@ public class ConversionDialogFragment extends DialogFragment implements TextWatc
     public static ConversionDialogFragment newInstance(HashMap<String, HashMap<String, Double>> exchangeRates) {
         ConversionDialogFragment fragment = new ConversionDialogFragment();
         Bundle args = new Bundle();
-//        args.putStringArray(KEY_CURRENCY_ARRAY, currencyArray);
         args.putSerializable(KEY_EXCHANGE_RATE_MAP, exchangeRates);
         fragment.setArguments(args);
         return fragment;
@@ -66,18 +65,15 @@ public class ConversionDialogFragment extends DialogFragment implements TextWatc
 
         getArgs();
         setUpSpinners();
+        editText.setText("1");
+        targetResultTextView.setText("1");
         editText.addTextChangedListener(this);
 
         // Configure the dialog.
         builder.setView(root)
                 // Add action buttons
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Dismiss", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        ConversionDialogFragment.this.getDialog().cancel();
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         ConversionDialogFragment.this.getDialog().cancel();
                     }
@@ -129,6 +125,7 @@ public class ConversionDialogFragment extends DialogFragment implements TextWatc
         if (baseCurrency.equals(targetCurrency)) {
             targetResultTextView.setText(editTextString);
         } else {
+            // FIXME: 11/13/16 java.lang.NumberFormatException: Invalid double: ""
             Double editTextValue = Double.parseDouble(editTextString);
             Double rate = exchangeRates.get(baseCurrency).get(targetCurrency);
             Double result = editTextValue * rate;
