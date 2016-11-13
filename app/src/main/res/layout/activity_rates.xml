@@ -24,25 +24,42 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
-            tools:text="Last updated at Nov 13, 2016 11:10 am"
+            android:text="Last updated at Nov 13, 2016 11:10 am"
+            android:textSize="12sp"
             />
 
-        <Spinner
-            android:id="@+id/baseCurrencySpinner"
-            android:layout_width="match_parent"
+        <RelativeLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="128dp"
-            android:layout_marginRight="128dp"
-            android:layout_marginTop="16dp"
-            />
+            android:layout_gravity="center"
+            android:layout_marginTop="32dp">
+
+            <TextView
+                android:id="@+id/selectCurrencyTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select a base currency: "
+                android:textSize="18sp"
+                />
+
+            <Spinner
+                android:id="@+id/baseCurrencySpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_toRightOf="@+id/selectCurrencyTextView"
+                />
+
+        </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/ratesRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
             android:layout_marginTop="32dp"
+            android:overScrollMode="never"
             />
 
     </LinearLayout>
