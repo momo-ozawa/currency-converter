@@ -10,15 +10,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mozawa.coineyapp.R;
 import com.mozawa.coineyapp.ui.base.BaseActivity;
 import com.mozawa.coineyapp.ui.conversion.ConversionDialogFragment;
 import com.mozawa.coineyapp.ui.widgets.DividerItemDecoration;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -37,12 +39,16 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.ratesRecyclerView)
-    RecyclerView ratesRecyclerView;
     @BindView(R.id.lastUpdatedTextView)
     TextView lastUpdatedTextView;
+    @BindView(R.id.selectCurrencyLayout)
+    RelativeLayout selectCurrencyLayout;
     @BindView(R.id.baseCurrencySpinner)
     Spinner baseCurrencySpinner;
+    @BindView(R.id.ratesRecyclerView)
+    RecyclerView ratesRecyclerView;
+    @BindView(R.id.messageTextView)
+    TextView messageTextView;
 
     private HashMap<String, HashMap<String, Double>> exchangeRates;
 
@@ -95,22 +101,9 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
         }
     }
 
-    // Helper method to update recycler view data based on the selected base currency.
-    private void updateRecylerView(HashMap<String, HashMap<String, Double>> exchangeRates) {
-        String selectedCurrency = baseCurrencySpinner.getSelectedItem().toString();
-        ratesAdapter.setData(exchangeRates.get(selectedCurrency));
-        ratesAdapter.notifyDataSetChanged();
-    }
-
-
     /*******
      * RatesMvpView implementation
      *******/
-
-    @Override
-    public void showProgressBar(boolean b) {
-
-    }
 
     @Override
     public void showExchangeRates(HashMap<String, HashMap<String, Double>> exchangeRates) {
@@ -125,22 +118,32 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
                 android.R.layout.simple_spinner_item, currencyArray);
         baseCurrencySpinner.setAdapter(adapter);
 
+        // Make sure the last updated text view, select currency layout and the
+        // recycler view are visible, but not the message text view.
+        if (messageTextView.getVisibility() == View.VISIBLE) {
+            messageTextView.setVisibility(View.GONE);
+        }
+        lastUpdatedTextView.setVisibility(View.VISIBLE);
+        selectCurrencyLayout.setVisibility(View.VISIBLE);
+        ratesRecyclerView.setVisibility(View.VISIBLE);
+
         // Set up recycler view.
         ratesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         ratesRecyclerView.setAdapter(ratesAdapter);
         ratesRecyclerView.addItemDecoration(new DividerItemDecoration(this));
 
         updateRecylerView(exchangeRates);
+        setLastUpdated();
     }
 
     @Override
     public void showError() {
-        Toast.makeText(this, "Error!", Toast.LENGTH_SHORT).show();
+        showMessage(getString(R.string.error_message));
     }
 
     @Override
     public void showExchangeRatesEmpty() {
-
+        showMessage(getString(R.string.empty_message));
     }
 
     @Override
@@ -150,4 +153,29 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
         dialogFragment.show(fm, "fragment_conversion_dialog");
     }
 
+    /*******
+     * Helper methods
+     *******/
+
+    // Helper method to update recycler view data based on the selected base currency.
+    private void updateRecylerView(HashMap<String, HashMap<String, Double>> exchangeRates) {
+        String selectedCurrency = baseCurrencySpinner.getSelectedItem().toString();
+        ratesAdapter.setData(exchangeRates.get(selectedCurrency));
+        ratesAdapter.notifyDataSetChanged();
+    }
+
+    // Helper method to update "last updated" text.
+    private void setLastUpdated() {
+        SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format));
+        String currentDateAndTime = sdf.format(new Date());
+        lastUpdatedTextView.setText(String.format(getString(R.string.last_updated), currentDateAndTime));
+    }
+
+    private void showMessage(String message) {
+        lastUpdatedTextView.setVisibility(View.GONE);
+        selectCurrencyLayout.setVisibility(View.GONE);
+        ratesRecyclerView.setVisibility(View.GONE);
+        messageTextView.setVisibility(View.VISIBLE);
+        messageTextView.setText(message);
+    }
 }

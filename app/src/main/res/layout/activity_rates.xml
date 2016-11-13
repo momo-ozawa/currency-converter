@@ -24,11 +24,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
-            android:text="Last updated at Nov 13, 2016 11:10 am"
+            tools:text="Last updated at Nov 13, 2016 12:00 am."
             android:textSize="12sp"
             />
 
         <RelativeLayout
+            android:id="@+id/selectCurrencyLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -52,15 +53,7 @@
 
         </RelativeLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/ratesRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="32dp"
-            android:layout_marginRight="32dp"
-            android:layout_marginTop="32dp"
-            android:overScrollMode="never"
-            />
+        <include layout="@layout/content_main"/>
 
     </LinearLayout>
 

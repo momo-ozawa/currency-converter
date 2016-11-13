@@ -42,20 +42,16 @@ public class RatesPresenter extends BasePresenter<RatesMvpView> {
         checkViewAttached();
         RxUtil.unsubscribe(subscription);
 
-        getMvpView().showProgressBar(true);
-
         subscription = dataManager.getMap()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<HashMap<String, HashMap<String, Double>>>() {
                     @Override
                     public void onCompleted() {
-                        getMvpView().showProgressBar(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        getMvpView().showProgressBar(false);
                         getMvpView().showError();
                     }
 
