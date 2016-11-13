@@ -202,7 +202,7 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
 
     private void setBaseCurrencySpinnerSelection(List<String> currencyList) {
         String baseCurrencyFromPref = preferencesHelper.getBaseCurrency();
-        if (baseCurrencyFromPref != null || !baseCurrencyFromPref.isEmpty()) {
+        if (baseCurrencyFromPref != null) {
             int index = currencyList.indexOf(baseCurrencyFromPref);
             if (index != -1) {
                 baseCurrencySpinner.setSelection(index);
