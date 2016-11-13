@@ -17,8 +17,9 @@ import android.widget.TextView;
 
 import com.mozawa.coineyapp.R;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,12 +92,11 @@ public class ConversionDialogFragment extends DialogFragment implements TextWatc
     }
 
     private void setUpSpinners() {
-        // Convert map keySet to a string array.
-        Set<String> keys = exchangeRates.keySet();
-        String[] currencyArray = keys.toArray(new String[keys.size()]);
+        // Convert map keySet to a List<String>.
+        List<String> currencyList = new ArrayList<>(exchangeRates.keySet());
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_spinner_item, currencyArray);
+                android.R.layout.simple_spinner_item, currencyList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         baseCurrencySpinner.setAdapter(adapter);
         targetCurrencySpinner.setAdapter(adapter);

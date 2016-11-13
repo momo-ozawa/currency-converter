@@ -5,11 +5,17 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.mozawa.coineyapp.MyApplication;
+import com.mozawa.coineyapp.data.local.PreferencesHelper;
 import com.mozawa.coineyapp.injection.component.ActivityComponent;
 import com.mozawa.coineyapp.injection.component.DaggerActivityComponent;
 import com.mozawa.coineyapp.injection.module.ActivityModule;
 
+import javax.inject.Inject;
+
 public class BaseActivity extends AppCompatActivity {
+
+    @Inject
+    protected PreferencesHelper preferencesHelper;
 
     private ActivityComponent activityComponent;
 

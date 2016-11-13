@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.mozawa.coineyapp.data.DataManager;
+import com.mozawa.coineyapp.data.local.PreferencesHelper;
 import com.mozawa.coineyapp.data.remote.CoineyService;
 import com.mozawa.coineyapp.injection.ApplicationContext;
 import com.mozawa.coineyapp.injection.module.ApplicationModule;
@@ -22,6 +23,8 @@ public interface ApplicationComponent {
     Application application();
 
     CoineyService coineyService();
+
+    PreferencesHelper preferencesHelper();
 
     DataManager dataManager();
 
