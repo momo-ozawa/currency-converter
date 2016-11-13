@@ -113,7 +113,10 @@ public class ConversionDialogFragment extends DialogFragment implements TextWatc
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+        if (s.length() == 0) {
+            // Really strange but setText("") wouldn't work... but setText(" ") does...
+            targetResultTextView.setText(" ");
+        }
     }
 
     @Override
@@ -122,14 +125,15 @@ public class ConversionDialogFragment extends DialogFragment implements TextWatc
         String targetCurrency = targetCurrencySpinner.getSelectedItem().toString();
         String editTextString = s.toString();
 
-        if (baseCurrency.equals(targetCurrency)) {
-            targetResultTextView.setText(editTextString);
-        } else {
-            // FIXME: 11/13/16 java.lang.NumberFormatException: Invalid double: ""
-            Double editTextValue = Double.parseDouble(editTextString);
-            Double rate = exchangeRates.get(baseCurrency).get(targetCurrency);
-            Double result = editTextValue * rate;
-            targetResultTextView.setText(result + "");
+        if (s.length() != 0) {
+            if (baseCurrency.equals(targetCurrency)) {
+                targetResultTextView.setText(editTextString);
+            } else {
+                Double rate = exchangeRates.get(baseCurrency).get(targetCurrency);
+                Double editTextValue = Double.parseDouble(editTextString);
+                Double targetResult = rate * editTextValue;
+                targetResultTextView.setText(targetResult + "");
+            }
         }
     }
 }
