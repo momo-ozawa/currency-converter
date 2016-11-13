@@ -24,15 +24,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
-            tools:text="Last updated at Nov 13, 2016 12:00 am."
             android:textSize="12sp"
+            tools:text="Last updated at Nov 13, 2016 12:00 am."
             />
 
         <RelativeLayout
             android:id="@+id/selectCurrencyLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="32dp"
             android:visibility="gone"
             tools:visibility="visible">
@@ -41,7 +41,8 @@
                 android:id="@+id/selectCurrencyTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select a base currency: "
+                android:layout_centerVertical="true"
+                android:text="@string/select_base_currency"
                 android:textSize="18sp"
                 />
 
@@ -49,8 +50,9 @@
                 android:id="@+id/baseCurrencySpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
+                android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/selectCurrencyTextView"
+                android:padding="10dp"
                 />
 
         </RelativeLayout>

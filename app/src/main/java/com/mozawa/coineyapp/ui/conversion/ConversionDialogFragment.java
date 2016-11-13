@@ -79,7 +79,7 @@ public class ConversionDialogFragment extends DialogFragment implements TextWatc
         // Configure the dialog.
         builder.setView(root)
                 // Add action buttons
-                .setPositiveButton("Dismiss", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         ConversionDialogFragment.this.getDialog().cancel();

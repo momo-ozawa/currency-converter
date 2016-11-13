@@ -1,11 +1,14 @@
 <resources>
     <string name="app_name">Currency Converter</string>
     <string name="action_settings">Settings</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="last_updated">Last updated at %s.</string>
     <string name="date_format">MMM dd, yyyy hh:mm:ss a</string>
     <string name="error_message">There was an error loading the exchange rates. Please try again.</string>
     <string name="empty_message">The data was empty.</string>
+    <string name="select_base_currency">Select a base currency:</string>
+    <string name="could_not_refresh">Couldn\'t refresh exchange rates.</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="base_currency">Base currency:</string>
+    <string name="target_currency">Target currency:</string>
+    <string name="calculate_conversion">Calculate Conversion</string>
 </resources>

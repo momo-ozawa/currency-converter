@@ -146,7 +146,7 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
 
         // Set adapter to spinner.
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, currencyList);
+                android.R.layout.simple_spinner_dropdown_item, currencyList);
         baseCurrencySpinner.setAdapter(adapter);
 
         // Make sure the last updated text view, select currency layout and the
@@ -172,7 +172,7 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
         if (exchangeRates == null) {
             showMessage(getString(R.string.error_message));
         }
-        Toast.makeText(this, "Couldn't refresh exchange rates.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.could_not_refresh, Toast.LENGTH_SHORT).show();
     }
 
     @Override
