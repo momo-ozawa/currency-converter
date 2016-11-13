@@ -15,6 +15,7 @@ import com.mozawa.coineyapp.ui.conversion.ConversionDialogFragment;
 import com.mozawa.coineyapp.ui.widgets.DividerItemDecoration;
 
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -32,6 +33,7 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
     RecyclerView ratesRecyclerView;
 
     private RatesAdapter ratesAdapter;
+    private Map<String, Double> map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,8 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
 
     @Override
     public void showResult(Map<String, Double> map) {
+        this.map = map;
+
         ratesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         ratesRecyclerView.setAdapter(ratesAdapter);
         ratesRecyclerView.addItemDecoration(new DividerItemDecoration(this));
@@ -102,8 +106,12 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
 
     @Override
     public void showConversionDialog() {
+        // Convert map keySet to a string array.
+        Set<String> keys = map.keySet();
+        String[] currencyArray = keys.toArray(new String[keys.size()]);
+
         FragmentManager fm = getSupportFragmentManager();
-        ConversionDialogFragment dialogFragment = ConversionDialogFragment.newInstance("Some title");
+        ConversionDialogFragment dialogFragment = ConversionDialogFragment.newInstance(currencyArray);
         dialogFragment.show(fm, "fragment_conversion_dialog");
     }
 }
