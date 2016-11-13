@@ -138,8 +138,8 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
         ratesRecyclerView.setAdapter(ratesAdapter);
         ratesRecyclerView.addItemDecoration(new DividerItemDecoration(this));
 
-        // Set the base currency spinner selection to a base currency from the
-        // shared pref file, if it exists.
+        // Set the spinner selection to the base currency from shared prefs iff it exists AND
+        // matches an entry in currencyList.
         setBaseCurrencySpinnerSelection(currencyList);
 
         selectedCurrency = baseCurrencySpinner.getSelectedItem().toString();
@@ -170,7 +170,7 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
 
     private void setBaseCurrencySpinnerSelection(List<String> currencyList) {
         String baseCurrencyFromPref = preferencesHelper.getBaseCurrency();
-        if (baseCurrencyFromPref != null || baseCurrencyFromPref != "") {
+        if (baseCurrencyFromPref != null || !baseCurrencyFromPref.isEmpty()) {
             int index = currencyList.indexOf(baseCurrencyFromPref);
             if (index != -1) {
                 baseCurrencySpinner.setSelection(index);
