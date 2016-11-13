@@ -160,7 +160,7 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
     @Override
     public void showConversionDialog() {
         FragmentManager fm = getSupportFragmentManager();
-        ConversionDialogFragment dialogFragment = ConversionDialogFragment.newInstance(exchangeRates);
+        ConversionDialogFragment dialogFragment = ConversionDialogFragment.newInstance(exchangeRates, selectedCurrency);
         dialogFragment.show(fm, "fragment_conversion_dialog");
     }
 

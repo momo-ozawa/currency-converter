@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -26,9 +27,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class ConversionDialogFragment extends DialogFragment implements TextWatcher {
+public class ConversionDialogFragment extends DialogFragment implements TextWatcher,
+        AdapterView.OnItemSelectedListener {
 
     public static final String KEY_EXCHANGE_RATE_MAP = "conversion_dialog_fragment.KEY_EXCHANGE_RATE_MAP";
+    public static final String KEY_SELECTED_CURRENCY = "conversion_dialog_fragment.KEY_SELECTED_CURRENCY";
 
     @BindView(R.id.baseCurrencySpinner)
     Spinner baseCurrencySpinner;
@@ -40,6 +43,8 @@ public class ConversionDialogFragment extends DialogFragment implements TextWatc
     TextView targetResultTextView;
 
     private HashMap<String, HashMap<String, Double>> exchangeRates;
+    private String selectedCurrency;
+
 
     public ConversionDialogFragment() {
         // Empty constructor is required for DialogFragment.
@@ -47,10 +52,12 @@ public class ConversionDialogFragment extends DialogFragment implements TextWatc
         // Use `newInstance` instead as shown below.
     }
 
-    public static ConversionDialogFragment newInstance(HashMap<String, HashMap<String, Double>> exchangeRates) {
+    public static ConversionDialogFragment newInstance(HashMap<String, HashMap<String, Double>> exchangeRates,
+                                                       String selectedCurrency) {
         ConversionDialogFragment fragment = new ConversionDialogFragment();
         Bundle args = new Bundle();
         args.putSerializable(KEY_EXCHANGE_RATE_MAP, exchangeRates);
+        args.putString(KEY_SELECTED_CURRENCY, selectedCurrency);
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,11 +72,9 @@ public class ConversionDialogFragment extends DialogFragment implements TextWatc
         View root = View.inflate(getActivity(), R.layout.fragment_conversion_dialog, null);
         ButterKnife.bind(this, root);
 
+        // Set up variables and views.
         getArgs();
-        setUpSpinners();
-        editText.append("1");
-        editText.addTextChangedListener(this);
-        targetResultTextView.setText("1");
+        initViews();
 
         // Configure the dialog.
         builder.setView(root)
@@ -93,18 +98,62 @@ public class ConversionDialogFragment extends DialogFragment implements TextWatc
             if (args.containsKey(KEY_EXCHANGE_RATE_MAP)) {
                 exchangeRates = (HashMap<String, HashMap<String, Double>>) args.getSerializable(KEY_EXCHANGE_RATE_MAP);
             }
+
+            if (args.containsKey(KEY_SELECTED_CURRENCY)) {
+                selectedCurrency = args.getString(KEY_SELECTED_CURRENCY);
+            }
         }
     }
 
-    private void setUpSpinners() {
+    private void initViews() {
         // Convert map keySet to a List<String>.
         List<String> currencyList = new ArrayList<>(exchangeRates.keySet());
 
+        initSpinners(currencyList);
+        initTextFields();
+    }
+
+    private void initTextFields() {
+        editText.append("1");  // Using 'append' will move the cursor to the end of text.
+        editText.addTextChangedListener(this);
+        targetResultTextView.setText("1");
+    }
+
+    private void initSpinners(List<String> currencyList) {
+        // Set adapters.
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item, currencyList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         baseCurrencySpinner.setAdapter(adapter);
         targetCurrencySpinner.setAdapter(adapter);
+
+        // Set item selected listeners.
+        baseCurrencySpinner.setOnItemSelectedListener(this);
+        targetCurrencySpinner.setOnItemSelectedListener(this);
+
+        // Set selection.
+        int index = currencyList.indexOf(selectedCurrency);
+        if (index != -1) {
+            baseCurrencySpinner.setSelection(index);
+            targetCurrencySpinner.setSelection(index);
+        }
+    }
+
+    private void updateTextFields(String editTextString) {
+        // Get selected items for both spinners.
+        String baseCurrency = baseCurrencySpinner.getSelectedItem().toString();
+        String targetCurrency = targetCurrencySpinner.getSelectedItem().toString();
+
+        if (editTextString.length() != 0) {
+            if (baseCurrency.equals(targetCurrency)) {
+                targetResultTextView.setText(editTextString);
+            } else {
+                Double rate = exchangeRates.get(baseCurrency).get(targetCurrency);
+                Double editTextValue = Double.parseDouble(editTextString);
+                Double targetResult = rate * editTextValue;
+                targetResultTextView.setText(targetResult + "");
+            }
+        }
     }
 
     /*******
@@ -119,26 +168,28 @@ public class ConversionDialogFragment extends DialogFragment implements TextWatc
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (s.length() == 0) {
-            // Really strange but setText("") wouldn't work... but setText(" ") does...
+            // Really strange that setText("") doesn't work... but setText(" ") does...
             targetResultTextView.setText(" ");
         }
     }
 
     @Override
     public void afterTextChanged(Editable s) {
-        String baseCurrency = baseCurrencySpinner.getSelectedItem().toString();
-        String targetCurrency = targetCurrencySpinner.getSelectedItem().toString();
-        String editTextString = s.toString();
+        updateTextFields(s.toString());
+    }
 
-        if (s.length() != 0) {
-            if (baseCurrency.equals(targetCurrency)) {
-                targetResultTextView.setText(editTextString);
-            } else {
-                Double rate = exchangeRates.get(baseCurrency).get(targetCurrency);
-                Double editTextValue = Double.parseDouble(editTextString);
-                Double targetResult = rate * editTextValue;
-                targetResultTextView.setText(targetResult + "");
-            }
-        }
+    /*******
+     * AdapterView.OnItemSelectedListener implementation
+     *******/
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String editTextString = editText.getText().toString().trim();
+        updateTextFields(editTextString);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }
