@@ -19,13 +19,24 @@
         android:textStyle="bold"
         />
 
-    <!--FROM currency-->
+    <TextView
+        android:id="@+id/exchangeRateTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titleTextView"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="24dp"
+        android:text="1 USD = 100 JPY"
+        />
+
+    <!--BASE currency-->
 
     <TextView
-        android:id="@+id/fromTextView"
+        android:id="@+id/baseCurrencyTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/titleTextView"
+        android:layout_below="@id/exchangeRateTextView"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="24dp"
@@ -33,10 +44,10 @@
         />
 
     <LinearLayout
-        android:id="@+id/fromCurrencyLayout"
+        android:id="@+id/baseCurrencyLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/fromTextView"
+        android:layout_below="@id/baseCurrencyTextView"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:gravity="center_vertical"
@@ -46,13 +57,14 @@
             android:id="@+id/editText"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="3"
+            android:digits="0123456789."
             android:imeOptions="actionDone"
-            android:inputType="text"
+            android:inputType="number"
             />
 
         <Spinner
-            android:id="@+id/fromCurrencySpinner"
+            android:id="@+id/baseCurrencySpinner"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -60,13 +72,13 @@
 
     </LinearLayout>
 
-    <!--TO currency-->
+    <!--TARGET currency-->
 
     <TextView
-        android:id="@+id/toTextView"
+        android:id="@+id/targetCurrencyTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/fromCurrencyLayout"
+        android:layout_below="@id/baseCurrencyLayout"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="16dp"
@@ -74,25 +86,28 @@
         />
 
     <LinearLayout
-        android:id="@+id/toCurrencyLayout"
+        android:id="@+id/targetCurrencyLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toTextView"
+        android:layout_below="@id/targetCurrencyTextView"
+        android:layout_marginBottom="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/exchangeRateTextView"
+            android:id="@+id/targetResultTextView"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="1 USD equals 100 JPY"
+            android:layout_weight="3"
+            android:text="1"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
             />
 
         <Spinner
-            android:id="@+id/toCurrencySpinner"
+            android:id="@+id/targetCurrencySpinner"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
