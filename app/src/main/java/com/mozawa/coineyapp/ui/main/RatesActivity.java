@@ -20,9 +20,10 @@ import com.mozawa.coineyapp.ui.conversion.ConversionDialogFragment;
 import com.mozawa.coineyapp.ui.widgets.DividerItemDecoration;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Set;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -51,6 +52,7 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
     TextView messageTextView;
 
     private HashMap<String, HashMap<String, Double>> exchangeRates;
+    private String selectedCurrency;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +75,9 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
         baseCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                updateRecylerView(exchangeRates);
+                selectedCurrency = baseCurrencySpinner.getSelectedItem().toString();
+                preferencesHelper.setBaseCurrency(selectedCurrency);
+                updateRecylerView(exchangeRates, selectedCurrency);
             }
 
             @Override
@@ -112,13 +116,12 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
     public void showExchangeRates(HashMap<String, HashMap<String, Double>> exchangeRates) {
         this.exchangeRates = exchangeRates;
 
-        // Convert map keySet to a string array.
-        Set<String> keys = exchangeRates.keySet();
-        String[] currencyArray = keys.toArray(new String[keys.size()]);
+        // Convert map keySet to a List<String>.
+        List<String> currencyList = new ArrayList<>(exchangeRates.keySet());
 
         // Set adapter to spinner.
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, currencyArray);
+                android.R.layout.simple_spinner_item, currencyList);
         baseCurrencySpinner.setAdapter(adapter);
 
         // Make sure the last updated text view, select currency layout and the
@@ -135,8 +138,13 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
         ratesRecyclerView.setAdapter(ratesAdapter);
         ratesRecyclerView.addItemDecoration(new DividerItemDecoration(this));
 
-        updateRecylerView(exchangeRates);
-        setLastUpdated();
+        // Set the base currency spinner selection to a base currency from the
+        // shared pref file, if it exists.
+        setBaseCurrencySpinnerSelection(currencyList);
+
+        selectedCurrency = baseCurrencySpinner.getSelectedItem().toString();
+        updateRecylerView(exchangeRates, selectedCurrency);
+        setLastUpdatedText();
     }
 
     @Override
@@ -160,15 +168,23 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
      * Helper methods
      *******/
 
-    // Helper method to update recycler view data based on the selected base currency.
-    private void updateRecylerView(HashMap<String, HashMap<String, Double>> exchangeRates) {
-        String selectedCurrency = baseCurrencySpinner.getSelectedItem().toString();
+    private void setBaseCurrencySpinnerSelection(List<String> currencyList) {
+        String baseCurrencyFromPref = preferencesHelper.getBaseCurrency();
+        if (baseCurrencyFromPref != null || baseCurrencyFromPref != "") {
+            int index = currencyList.indexOf(baseCurrencyFromPref);
+            if (index != -1) {
+                baseCurrencySpinner.setSelection(index);
+            }
+        }
+    }
+
+    private void updateRecylerView(HashMap<String, HashMap<String, Double>> exchangeRates,
+                                   String selectedCurrency) {
         ratesAdapter.setData(exchangeRates.get(selectedCurrency));
         ratesAdapter.notifyDataSetChanged();
     }
 
-    // Helper method to update "last updated" text.
-    private void setLastUpdated() {
+    private void setLastUpdatedText() {
         SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format));
         String currentDateAndTime = sdf.format(new Date());
         lastUpdatedTextView.setText(String.format(getString(R.string.last_updated), currentDateAndTime));
