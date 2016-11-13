@@ -10,6 +10,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -66,9 +67,9 @@ public class ConversionDialogFragment extends DialogFragment implements TextWatc
 
         getArgs();
         setUpSpinners();
-        editText.setText("1");
-        targetResultTextView.setText("1");
+        editText.append("1");
         editText.addTextChangedListener(this);
+        targetResultTextView.setText("1");
 
         // Configure the dialog.
         builder.setView(root)
@@ -79,7 +80,11 @@ public class ConversionDialogFragment extends DialogFragment implements TextWatc
                         ConversionDialogFragment.this.getDialog().cancel();
                     }
                 });
-        return builder.create();
+
+        Dialog dialog = builder.create();
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+        return dialog;
     }
 
     private void getArgs() {
