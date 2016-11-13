@@ -4,9 +4,16 @@
       tools:context=".ui.main.RatesActivity">
 
     <item
-        android:id="@+id/action_convert"
-        android:title="Convert"
+        android:id="@+id/action_refresh"
+        android:title="Refresh"
         android:icon="@drawable/ic_autorenew_white_24dp"
+        app:showAsAction="ifRoom"
+        />
+
+    <item
+        android:id="@+id/action_convert"
+        android:title="Calculate Conversion"
+        android:icon="@drawable/ic_search_white_24dp"
         app:showAsAction="ifRoom"
         />
 

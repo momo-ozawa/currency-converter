@@ -93,6 +93,9 @@ public class RatesActivity extends BaseActivity implements RatesMvpView {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_refresh:
+                presenter.loadExchangeRates();
+                return true;
             case R.id.action_convert:
                 presenter.onCalculateConversionClicked();
                 return true;

@@ -23,7 +23,7 @@
         android:layout_marginRight="32dp"
         android:layout_marginTop="48dp"
         android:visibility="gone"
-        tools:text="There was an error loading the echange rates. Please try again."
+        tools:text="There was an error loading the exchange rates. Please try again."
         tools:visibility="visible"
         />
 
